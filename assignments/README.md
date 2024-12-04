@@ -1,6 +1,6 @@
 # Foundations Learning Path Assignments
 
-[![Python CI](https://github.com/andrebastosdias/lp-foundations/actions/workflows/test.yaml/badge.svg?branch=main)](https://github.com/andrebastosdias/lp-foundations/actions/workflows/test.yaml)
+[![Python CI](https://github.com/andrebastosdias/lp-foundations/actions/workflows/test.yaml/badge.svg)](https://github.com/andrebastosdias/lp-foundations/actions/workflows/test.yaml)
 
 ## Introduction
 
