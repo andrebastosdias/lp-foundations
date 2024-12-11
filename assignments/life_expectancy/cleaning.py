@@ -1,5 +1,6 @@
 import argparse
 import os
+from typing import Optional
 
 import pandas as pd
 
@@ -17,7 +18,7 @@ def save_data(df: pd.DataFrame) -> None:
     df.to_csv(os.path.join(DATA_DIR, 'pt_life_expectancy.csv'), index=False)
 
 
-def clean_data(df: pd.DataFrame, country: str) -> pd.DataFrame:
+def clean_data(df: pd.DataFrame, country: Optional[str]) -> pd.DataFrame:
     '''Clean the raw data.'''
     df_split = df['unit,sex,age,geo\\time'].str.split(',', expand=True)
     df_split.columns = ['unit', 'sex', 'age', 'region']
@@ -29,16 +30,18 @@ def clean_data(df: pd.DataFrame, country: str) -> pd.DataFrame:
     df['value'] = pd.to_numeric(df['value'].str.extract(r'^(\d*\.?\d+)')[0], errors='coerce').astype(float)
     df = df.dropna(subset=['value'])
 
-    df = df[df['region'] == country]
+    if country:
+        df = df[df['region'] == country]
 
-    return df
+    return df.reset_index(drop=True)
 
 
-def main(country: str) -> None:
+def main(country: Optional[str]) -> pd.DataFrame:
     '''Main function.'''
     df = load_data()
     df = clean_data(df, country)
     save_data(df)
+    return df
 
 
 if __name__ == '__main__':
