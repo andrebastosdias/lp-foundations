@@ -30,14 +30,14 @@ jobs:
         python -m pip install --upgrade pip
         pip install -e '.[dev]'
 
+    # Run pylint
+    - name: Run pylint
+      working-directory: assignments/life_expectancy
+      run: |
+        pylint .
+
     # Run pytest
     - name: Run pytest
       working-directory: assignments/life_expectancy
       run: |
         pytest
-
-    # Run pylint
-    - name: Run pylint
-      working-directory: assignments/life_expectancy
-      run: |
-        pylint $(find . -type f -name "*.py")
