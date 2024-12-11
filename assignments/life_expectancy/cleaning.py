@@ -1,8 +1,10 @@
 import argparse
 import os
-from typing import Optional
+from typing import Optional, Union
 
 import pandas as pd
+
+from life_expectancy.region import Region
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 
@@ -18,7 +20,7 @@ def save_data(df: pd.DataFrame) -> None:
     df.to_csv(os.path.join(DATA_DIR, 'pt_life_expectancy.csv'), index=False)
 
 
-def clean_data(df: pd.DataFrame, country: Optional[str]) -> pd.DataFrame:
+def clean_data(df: pd.DataFrame, country: Optional[Region]) -> pd.DataFrame:
     '''Clean the raw data.'''
     df_split = df['unit,sex,age,geo\\time'].str.split(',', expand=True)
     df_split.columns = ['unit', 'sex', 'age', 'region']
@@ -31,13 +33,15 @@ def clean_data(df: pd.DataFrame, country: Optional[str]) -> pd.DataFrame:
     df = df.dropna(subset=['value'])
 
     if country:
-        df = df[df['region'] == country]
+        df = df[df['region'] == country.name]
 
     return df.reset_index(drop=True)
 
 
-def main(country: Optional[str]) -> pd.DataFrame:
+def main(country: Optional[Union[str, Region]]) -> pd.DataFrame:
     '''Main function.'''
+    if isinstance(country, str):
+        country = Region[country]
     df = load_data()
     df = clean_data(df, country)
     save_data(df)
